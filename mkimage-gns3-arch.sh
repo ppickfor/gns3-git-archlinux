@@ -23,7 +23,7 @@ chmod 755 $ROOTFS
 
 # packages to ignore for space savings
 PKGIGNORE=linux,jfsutils,lvm2,groff,man-db,man-pages,mdadm,pciutils,pcmciautils,reiserfsprogs,s-nail,xfsprogs
-EXTRA="icu xorg-fonts-misc python-setuptools dynamips-git  gns3-gui-git  gns3-server-git  iouyap-git  vpcs-git python-apache-libcloud python-netifaces-git ws4py"
+EXTRA="icu xorg-fonts-misc python-setuptools dynamips-git  gns3-gui-git  gns3-server-git  iouyap-git  vpcs-git python-apache-libcloud python-netifaces-git ws4py lib32-openssl"
 
 #add localrepo
 cp mkimage-gns3-arch-pacman.conf.template mkimage-gns3-arch-pacman.conf
@@ -36,7 +36,7 @@ Server = file://${REPOPATH}
 
 expect <<EOF
   set timeout 60
-  set send_slow {1 1}
+  set send_slow {1 0.1}
   spawn pacstrap -C ${SCRIPTPATH}/mkimage-gns3-arch-pacman.conf -c -d -G -i $ROOTFS base haveged  $EXTRA --ignore $PKGIGNORE
   expect {
     "Install anyway?" { send -s n\r; exp_continue }
@@ -55,6 +55,8 @@ arch-chroot $ROOTFS /bin/sh -c "ln -s /usr/share/zoneinfo/UTC /etc/localtime"
 echo 'en_US.UTF-8 UTF-8' > $ROOTFS/etc/locale.gen
 arch-chroot $ROOTFS locale-gen
 arch-chroot $ROOTFS /bin/sh -c 'echo "Server = https://mirrors.kernel.org/archlinux/\$repo/os/\$arch" > /etc/pacman.d/mirrorlist'
+#fix missing library for iou
+arch-chroot $ROOTFS /bin/sh -c 'ln -s /usr/lib32/libcrypto.so.1.0.0 /usr/lib32/libcrypto.so.4'
 
 # udev doesn't work in containers, rebuild /dev
 DEV=$ROOTFS/dev
