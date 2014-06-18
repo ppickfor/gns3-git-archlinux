@@ -39,14 +39,14 @@ expect <<EOF
   set send_slow {1 1}
   spawn pacstrap -C ${SCRIPTPATH}/mkimage-gns3-arch-pacman.conf -c -d -G -i $ROOTFS base haveged  $EXTRA --ignore $PKGIGNORE
   expect {
-    "Install anyway?" { send n\r; exp_continue }
-    "(default=all)" { send \r; exp_continue }
-    "Proceed with installation?" { send "\r"; exp_continue }
-    "skip the above package" {send "y\r"; exp_continue }
+    "Install anyway?" { send -s n\r; exp_continue }
+    "(default=all)" { send -s \r; exp_continue }
+    "Proceed with installation?" { send -s "\r"; exp_continue }
+    "skip the above package" {send -s "y\r"; exp_continue }
     "checking" { exp_continue }
     "loading" { exp_continue }
     "installing" { exp_continue }
-    "Enter a number (default=1):" { send 1\r; exp_continue }
+    "Enter a number (default=1):" { send -s 1\r; exp_continue }
   }
 EOF
 
