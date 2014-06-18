@@ -11,12 +11,14 @@ GNS3PACKAGES=(dynamips-git  gns3-gui-git  gns3-server-git  iouyap-git  vpcs-git)
 cp -r "${GNS3PACKAGES[@]}" ${TMPDIR}/
 for PACKAGE in "${GNS3PACKAGES[@]}"
 do
+	[ -f ${SCRIPTPATH?}/repo/${PACKAGE}*.pkg.tar.* ] && continue
 	cd ${TMPDIR}/${PACKAGE}
-	makepkg
+	makepkg -d
 	mv ${TMPDIR}/${PACKAGE}/*.pkg.tar.* ${SCRIPTPATH?}/repo/
 done
 for PACKAGE in "${PACKAGES[@]}"
 do
+	[ -f ${SCRIPTPATH?}/repo/${PACKAGE}*.pkg.tar.* ] && continue
 	cd ${TMPDIR}
 	curl -O https://aur.archlinux.org/packages/${PACKAGE:0:2}/${PACKAGE}/${PACKAGE}.tar.gz
 	tar xzf ${PACKAGE}.tar.gz
