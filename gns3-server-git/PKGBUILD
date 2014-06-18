@@ -1,7 +1,7 @@
 # Maintainer: korjjj <korjjj@gmail.com>
 
 pkgname=gns3-server-git
-pkgver=152.cb763e0
+pkgver=0.0.0
 pkgrel=1
 pkgdesc='GNS3 server. This is an early release of the new GNS3. _You need a GNS3 membership in order to use it._'
 arch=('any')
@@ -17,7 +17,10 @@ md5sums=('SKIP')
 pkgver() {
   cd "$srcdir/gns3-server"
 
-  echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+  git describe --long | sed -r 's/([^-]*-g)/r\1/;s/-/./g'
+  [ $PIPESTATUS -ne 0 ] && git describe --long --tags | sed -r 's/([^-]*-g)/r\1/;s/-/./g'
+  [ $PIPESTATUS -ne 0 ] && printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+
 }
 
 package() {

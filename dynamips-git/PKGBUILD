@@ -1,7 +1,7 @@
 # Maintainer: 
 
-pkgname=dynamips
-pkgver=3.1c7c668
+pkgname=dynamips-git
+pkgver=0.0.0
 pkgrel=1
 pkgdesc="Cisco router emulator."
 arch=('i686' 'x86_64')
@@ -12,6 +12,15 @@ makedepends=('git' 'cmake' 'gcc')
 conflicts=(dynamips-community)
 source=("dynamips::git://github.com/GNS3/dynamips.git")
 md5sums=('SKIP')
+
+pkgver() {
+  cd "$srcdir/dynamips"
+  
+  git describe --long | sed -r 's/([^-]*-g)/r\1/;s/-/./g'
+  [ $PIPESTATUS -ne 0 ] && git describe --long --tags | sed -r 's/([^-]*-g)/r\1/;s/-/./g'
+  [ $PIPESTATUS -ne 0 ] && printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  
+} 
 
 build() {
   if test "$CARCH" == x86_64; then

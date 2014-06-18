@@ -1,31 +1,6 @@
 # vim:set ts=2 sw=2 et:
-# Maintainer: Paul Meng <mirnshi@gmail.com>
-#Copyright (c) 2007-2013, Paul Meng (mirnshi@gmail.com)
-#All rights reserved.
-#
-#Redistribution and use in source and binary forms, with or without 
-#modification, are permitted provided that the following conditions 
-#are met:
-#1. Redistributions of source code must retain the above copyright 
-   #notice, this list of conditions and the following disclaimer.
-#2. Redistributions in binary form must reproduce the above copyright 
-   #notice, this list of conditions and the following disclaimer in the 
-   #documentation and/or other materials provided with the distribution.
-#
-#THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-#AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
-#IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
-#ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE 
-#LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
-#CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
-#SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
-#INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
-#CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-#ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
-#THE POSSIBILITY OF SUCH DAMAGE.
-#
 pkgname=vpcs-git
-pkgver=8.b6a04f6
+pkgver=0.0.0
 pkgrel=1
 pkgdesc="Virtual PC Simulator"
 arch=('i686' 'x86_64')
@@ -40,7 +15,10 @@ provides=('vpcs')
 pkgver() {
   cd "$srcdir/vpcs"
 
-  echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+  git describe --long | sed -r 's/([^-]*-g)/r\1/;s/-/./g'
+  [ $PIPESTATUS -ne 0 ] && git describe --long --tags | sed -r 's/([^-]*-g)/r\1/;s/-/./g'
+  [ $PIPESTATUS -ne 0 ] && printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+
 }
 
 build() {
