@@ -1,4 +1,4 @@
-#!//usr/bin/bash -x
+#!/usr/bin/env bash
 # Generate a minimal filesystem for archlinux and load it into the local
 # docker as "archlinux"
 # requires root
@@ -22,8 +22,8 @@ ROOTFS=$(mktemp -d /tmp/rootfs-archlinux-XXXXXXXXXX)
 chmod 755 $ROOTFS
 
 # packages to ignore for space savings
-PKGIGNORE=linux,jfsutils,lvm2,groff,man-db,man-pages,mdadm,pciutils,pcmciautils,reiserfsprogs,s-nail,xfsprogs
-EXTRA="icu xorg-fonts-misc python-setuptools dynamips-git  gns3-gui-git  gns3-server-git  iouyap-git  vpcs-git python-apache-libcloud python-netifaces-git ws4py lib32-openssl"
+PKGIGNORE=linux,jfsutils,lvm2,cryptsetup,groff,man-db,man-pages,mdadm,pciutils,pcmciautils,reiserfsprogs,s-nail,xfsprogs
+EXTRA="iniparser python2 xterm icu xorg-fonts-misc python-setuptools dynamips-git  gns3-gui-git  gns3-server-git  iouyap-git  vpcs-git python-apache-libcloud python-netifaces-git ws4py lib32-openssl lib32-gcc-libs"
 
 #add localrepo
 cp mkimage-gns3-arch-pacman.conf.template mkimage-gns3-arch-pacman.conf
@@ -49,6 +49,8 @@ expect <<EOF
     "Enter a number (default=1):" { send -s 1\r; exp_continue }
   }
 EOF
+
+mountpoint $ROOTFS && umount -R $ROOTFS
 
 arch-chroot $ROOTFS /bin/sh -c "haveged -w 1024; pacman-key --init; pkill haveged; pacman -Rs --noconfirm haveged; pacman-key --populate archlinux"
 arch-chroot $ROOTFS /bin/sh -c "ln -s /usr/share/zoneinfo/UTC /etc/localtime"
@@ -76,6 +78,6 @@ mknod -m 600 $DEV/initctl p
 mknod -m 666 $DEV/ptmx c 5 2
 ln -sf /proc/self/fd $DEV/fd
 
-tar --numeric-owner -C $ROOTFS -c . | docker import - ppickfor/gns3-1.0alpha
-docker run -i -t ppickfor/gns3-1.0alpha echo Success.
+tar --numeric-owner -C $ROOTFS -c . | docker import - ppickfor/gns3
+docker run -i -t ppickfor/gns3 echo Success.
 rm -rf $ROOTFS
