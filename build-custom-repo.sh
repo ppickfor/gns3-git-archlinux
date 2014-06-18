@@ -21,7 +21,7 @@ do
 	curl -O https://aur.archlinux.org/packages/${PACKAGE:0:2}/${PACKAGE}/${PACKAGE}.tar.gz
 	tar xzf ${PACKAGE}.tar.gz
 	cd ${TMPDIR}/${PACKAGE}
-	makepkg
+	makepkg -d
 	mv ${TMPDIR}/${PACKAGE}/*.pkg.tar.* ${SCRIPTPATH?}/repo/
 done
 rm -rf ${TMPDIR}

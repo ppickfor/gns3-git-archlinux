@@ -1,14 +1,13 @@
 # Maintainer: korjjj <korjjj@gmail.com>
 
 pkgname=gns3-gui-git
-pkgver=0.0.0
+pkgver=1.0.alpha6.r35.gb295ab1
 pkgrel=1
 pkgdesc='GNS3 GUI. This is an early release of the new GNS3. _You need a GNS3 membership in order to use it._'
 arch=('any')
 url="https://github.com/GNS3/gns3-gui"
 license=('GPL3')
 depends=('python-setuptools' 'python-pyqt4' 'python-apache-libcloud' 'ws4py' 'python-requests' 'dynamips-git')
-makedepends=('python-setuptools')
 optdepends=('gns3-server')
 conflicts=('gns3' 'gns3-git')
 source=("gns3-gui::git://github.com/GNS3/gns3-gui.git")
