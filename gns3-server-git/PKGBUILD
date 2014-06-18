@@ -1,0 +1,28 @@
+# Maintainer: korjjj <korjjj@gmail.com>
+
+pkgname=gns3-server-git
+pkgver=152.cb763e0
+pkgrel=1
+pkgdesc='GNS3 server. This is an early release of the new GNS3. _You need a GNS3 membership in order to use it._'
+arch=('any')
+url='https://github.com/GNS3/gns3-server'
+license=('GPL3')
+depends=('python-pyzmq' 'python-tornado' 'python-jsonschema')
+makedepends=('python-setuptools')
+optdepends=('python-netifaces-git')
+conflicts=()
+source=("gns3-server::git://github.com/GNS3/gns3-server.git")
+md5sums=('SKIP')
+
+pkgver() {
+  cd "$srcdir/gns3-server"
+
+  echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+}
+
+package() {
+  cd ${srcdir}/gns3-server
+  python3 setup.py install --root=${pkgdir} --optimize=1
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+# vim:set ts=2 sw=2 et:

@@ -1,0 +1,29 @@
+# vim:set ts=2 sw=2 et:
+pkgname=iouyap-git
+pkgver=3.1c7c668
+pkgrel=1
+pkgdesc="Bridge IOU to UDP, TAP and Ethernet"
+arch=('i686' 'x86_64')
+url="https://github.com/GNS3/iouyap.git"
+license=('GNU3')
+makedepends=('git bison flex gcc')
+source=("iouyap::git://github.com/GNS3/iouyap.git")
+sha256sums=('SKIP')
+conflicts=('iouyap')
+provides=('iouyap')
+
+pkgver() {
+  cd "$srcdir/iouyap"
+
+  echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+}
+
+build() {
+  cd "$srcdir/iouyap"
+
+  make
+}
+package() {
+  install -D -m 0755 "${srcdir}/iouyap/iouyap" "${pkgdir}/usr/bin/iouyap"
+}
+

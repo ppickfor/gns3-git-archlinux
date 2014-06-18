@@ -1,0 +1,33 @@
+# Maintainer: 
+
+pkgname=dynamips
+pkgver=3.1c7c668
+pkgrel=1
+pkgdesc="Cisco router emulator."
+arch=('i686' 'x86_64')
+url="https://github.com/GNS3/dynamips"
+license=('GPL2')
+depends=(libpcap util-linux elfutils)
+makedepends=('git' 'cmake' 'gcc')
+conflicts=(dynamips-community)
+source=("dynamips::git://github.com/GNS3/dynamips.git")
+md5sums=('SKIP')
+
+build() {
+  if test "$CARCH" == x86_64; then
+    export DYNAMIPS_ARCH=amd64 CMAKE_LIBRARY_PATH=/lib
+  else
+    export DYNAMIPS_ARCH=x86 CMAKE_LIBRARY_PATH=/lib
+  fi
+  cd ${srcdir}/dynamips
+  cmake -DDYNAMIPS_ARCH=$DYNAMIPS_ARCH -DDYNAMIPS_CODE=both -DDYNAMIPS_RENAME=stable -DANY_COMPILER=1 -DCMAKE_LIBRARY_PATH=$CMAKE_LIBRARY_PATH -DCMAKE_INSTALL_PREFIX=/usr
+  make
+}
+
+package() {
+  cd ${srcdir}/dynamips
+  make DESTDIR="${pkgdir}" install
+  install -Dm644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
+}
+
+# vim:set ts=2 sw=2 et:
