@@ -1,6 +1,7 @@
-#!/bin/bash -x
+#!/bin/bash 
 SCRIPTPATH=$(readlink -f $0)
 SCRIPTPATH=${SCRIPTPATH%/*}
+source ${SCRIPTPATH}/logme.sh
 cd ${SCRIPTPATH}
 [ -d repo ] || mkdir repo
 TMPDIR=$(mktemp -d /tmp/build_XXXXXXX)

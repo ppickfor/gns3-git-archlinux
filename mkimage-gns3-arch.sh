@@ -1,10 +1,11 @@
-#!/usr/bin/env bash
+#!//usr/bin/bash -x
 # Generate a minimal filesystem for archlinux and load it into the local
 # docker as "archlinux"
 # requires root
 set -e
 SCRIPTPATH=$(readlink -f $0)
 SCRIPTPATH=${SCRIPTPATH%/*}
+source ${SCRIPTPATH}/logme.sh
 REPOPATH=${SCRIPTPATH}/repo
 
 hash pacstrap &>/dev/null || {
@@ -23,12 +24,13 @@ chmod 755 $ROOTFS
 # packages to ignore for space savings
 PKGIGNORE=linux,jfsutils,lvm2,groff,man-db,man-pages,mdadm,pciutils,pcmciautils,reiserfsprogs,s-nail,xfsprogs
 EXTRA="icu xorg-fonts-misc python-setuptools dynamips-git  gns3-gui-git  gns3-server-git  iouyap-git  vpcs-git python-apache-libcloud python-netifaces-git ws4py"
+
 #add localrepo
 cp mkimage-gns3-arch-pacman.conf.template mkimage-gns3-arch-pacman.conf
 cat >> mkimage-gns3-arch-pacman.conf <<!EOF
 [custom]
 SigLevel = Optional TrustAll
-Server = file:///${REPOPATH}
+Server = file://${REPOPATH}
 !EOF
 
 
