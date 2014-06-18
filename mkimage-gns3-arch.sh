@@ -3,6 +3,9 @@
 # docker as "archlinux"
 # requires root
 set -e
+SCRIPTPATH=$(readlink -f $0)
+SCRIPTPATH=${SCRIPTPATH%/*}
+REPOPATH=${SCRIPTPATH}/repo
 
 hash pacstrap &>/dev/null || {
     echo "Could not find pacstrap. Run pacman -S arch-install-scripts"
@@ -19,12 +22,20 @@ chmod 755 $ROOTFS
 
 # packages to ignore for space savings
 PKGIGNORE=linux,jfsutils,lvm2,groff,man-db,man-pages,mdadm,pciutils,pcmciautils,reiserfsprogs,s-nail,xfsprogs
-EXTRA="icu xorg-fonts-misc python-setuptools dynamips gns3-gui gns3-server python-apache-libcloud python-netifaces-git ws4py"
+EXTRA="icu xorg-fonts-misc python-setuptools dynamips-git  gns3-gui-git  gns3-server-git  iouyap-git  vpcs-git python-apache-libcloud python-netifaces-git ws4py"
+#add localrepo
+cp mkimage-gns3-arch-pacman.conf.template mkimage-gns3-arch-pacman.conf
+cat >> mkimage-gns3-arch-pacman.conf <<!EOF
+[custom]
+SigLevel = Optional TrustAll
+Server = file:///${REPOPATH}
+!EOF
+
 
 expect <<EOF
   set timeout 60
   set send_slow {1 1}
-  spawn pacstrap -C ./mkimage-arch-pacman.conf -c -d -G -i $ROOTFS base haveged  $EXTRA --ignore $PKGIGNORE
+  spawn pacstrap -C ${SCRIPTPATH}/mkimage-gns3-arch-pacman.conf -c -d -G -i $ROOTFS base haveged  $EXTRA --ignore $PKGIGNORE
   expect {
     "Install anyway?" { send n\r; exp_continue }
     "(default=all)" { send \r; exp_continue }
