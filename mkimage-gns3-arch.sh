@@ -35,8 +35,8 @@ Server = file://${REPOPATH}
 
 
 expect <<EOF
-  set timeout 60
-  set send_slow {1 0.1}
+  set timeout 300
+  set send_slow {1 0.2}
   spawn pacstrap -C ${SCRIPTPATH}/mkimage-gns3-arch-pacman.conf -c -d -G -i $ROOTFS base haveged  $EXTRA --ignore $PKGIGNORE
   expect {
     "Install anyway?" { send -s n\r; exp_continue }
@@ -49,8 +49,6 @@ expect <<EOF
     "Enter a number (default=1):" { send -s 1\r; exp_continue }
   }
 EOF
-
-mountpoint $ROOTFS && umount -R $ROOTFS
 
 arch-chroot $ROOTFS /bin/sh -c "haveged -w 1024; pacman-key --init; pkill haveged; pacman -Rs --noconfirm haveged; pacman-key --populate archlinux"
 arch-chroot $ROOTFS /bin/sh -c "ln -s /usr/share/zoneinfo/UTC /etc/localtime"
