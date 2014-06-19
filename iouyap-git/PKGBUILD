@@ -24,7 +24,7 @@ pkgver() {
 build() {
   cd "$srcdir/iouyap"
 
-  make
+  make CFLAGS=-O2
 }
 package() {
   install -D -m 0755 "${srcdir}/iouyap/iouyap" "${pkgdir}/usr/bin/iouyap"
