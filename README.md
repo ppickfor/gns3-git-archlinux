@@ -10,7 +10,7 @@ install build dependencies makepkg has dependency checking off so even build dep
 pacman -S cmake python-setuptools arch-install-scripts expect
 ./build-custom-repo.sh
 sudo ./mkimage-gns3-arch.sh
-#builds docker image ppickfor/gns3-iou
-xhost + ;docker run -h gns3-iou -v ~/iou:/iou -v ~/ios:/ios -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix/$DISPLAY -e LANG=en_US.UTF-8 -it  ppickfor/gns3:latest bash
+-- builds docker image ppickfor/gns3-iou
+xhost + ;docker run -h gns3-iou -v ~/iou:/iou -v ~/ios:/ios -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix/$DISPLAY -e LANG=en_US.UTF-8 -it  ppickfor/gns3-iou:latest bash
 python2 /iou/keygen.py
 gns3
